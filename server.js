@@ -7,6 +7,8 @@ const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 
+console.log("LMS server starting... 🚀");  
+
 const app = express();
 app.use(cors());
 app.use(express.json());  // parse JSON body
@@ -43,6 +45,7 @@ function authenticateToken(req, res, next) {
     next();
   });
 }
+
 
 // === Routes ===
 
