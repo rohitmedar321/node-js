@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>View Video</title>
+</head>
+<body>
+  <h1 id="courseTitle">Course</h1>
+  <video id="videoPlayer" width="640" height="360" controls>
+    <source id="videoSrc" src="" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+
+  <script>
+    const token = localStorage.getItem('token');
+    if (!token) {
+      window.location = 'login.html';
+    }
+    const urlParams = new URLSearchParams(window.location.search);
+    const courseId = urlParams.get('courseId');
+
+    async function loadVideo() {
+      // Optionally fetch course metadata (title) via /api/courses and find this id
+      const respCourses = await fetch('http://localhost:3000/api/courses', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      const courses = await respCourses.json();
+      const course = courses.find(c => c.id == courseId);
+      if (course) {
+        document.getElementById('courseTitle').innerText = course.title;
+      }
+
+      // Set video src to streaming endpoint
+      const srcUrl = `http://localhost:3000/api/video/${courseId}`;
+      document.getElementById('videoSrc').src = srcUrl;
+      document.getElementById('videoPlayer').load();
+    }
+
+    loadVideo();
+  </script>
+</body>
+</html>

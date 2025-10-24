@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>LMS Login</title>
+</head>
+<body>
+  <h1>Login</h1>
+  <form id="loginForm">
+    <label>Username: <input type="text" name="username" /></label><br />
+    <label>Password: <input type="password" name="password" /></label><br />
+    <button type="submit">Login</button>
+  </form>
+  <div id="msg"></div>
+
+  <script>
+    const form = document.getElementById('loginForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const username = formData.get('username');
+      const password = formData.get('password');
+      const resp = await fetch('http://localhost:3000/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+      const data = await resp.json();
+      if (resp.ok) {
+        localStorage.setItem('token', data.token);
+        window.location = 'dashboard.html';
+      } else {
+        document.getElementById('msg').innerText = data.message;
+      }
+    });
+  </script>
+</body>
+</html>

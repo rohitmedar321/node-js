@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard - LMS</title>
+</head>
+<body>
+  <h1>My Courses</h1>
+  <button id="logoutBtn">Logout</button>
+  <div id="coursesList"></div>
+
+  <script>
+    const token = localStorage.getItem('token');
+    if (!token) {
+      window.location = 'login.html';
+    }
+
+    document.getElementById('logoutBtn').onclick = () => {
+      localStorage.removeItem('token');
+      window.location = 'login.html';
+    };
+
+    async function loadCourses() {
+      const resp = await fetch('http://localhost:3000/api/courses', {
+        method: 'GET',
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      if (!resp.ok) {
+        console.error('Failed to fetch courses');
+        return;
+      }
+      const courses = await resp.json();
+      const container = document.getElementById('coursesList');
+      container.innerHTML = '';
+      courses.forEach(c => {
+        const div = document.createElement('div');
+        div.innerHTML = `
+          <h3>${c.title}</h3>
+          <p>${c.description || ''}</p>
+          <button onclick="openCourse(${c.id})">Open</button>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function openCourse(courseId) {
+      // Navigate to video view page
+      window.location = `video.html?courseId=${courseId}`;
+    }
+
+    loadCourses();
+  </script>
+</body>
+</html>
