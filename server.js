@@ -22,6 +22,8 @@ if (!fs.existsSync(VIDEO_DIR)) {
   fs.mkdirSync(VIDEO_DIR);
 }
 
+console.log("server");  
+
 // MySQL connection pool
 const pool = mysql.createPool({
   host: 'localhost',
