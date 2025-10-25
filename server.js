@@ -73,6 +73,8 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
+console.log("register")
+
 // --- 2. Login ---
 app.post('/api/login', async (req, res) => {
   try {
